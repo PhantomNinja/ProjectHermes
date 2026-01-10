@@ -1,4 +1,5 @@
-﻿ using UnityEngine;
+﻿using NUnit.Framework.Interfaces;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM 
 using UnityEngine.InputSystem;
 #endif
@@ -38,6 +39,7 @@ namespace StarterAssets
 
         [Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
         public float Gravity = -15.0f;
+        private float _currentGravity = -15.0f;
 
         [Space(10)]
         [Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
@@ -46,6 +48,20 @@ namespace StarterAssets
         [Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
         public float FallTimeout = 0.15f;
 
+        [Header("Player Clinging")]
+        [Tooltip("If the character is clinging to a wall or not.")]
+        public bool Clinging = false;
+        [Tooltip("Determines if the character is able to cling to a wall or not.")]
+        public bool CanCling = false;
+        
+        [Tooltip("How long the player is able to cling.")]
+        public float ClingTime = 0.5f;
+        private float _currentClingTime = 0.5f;
+        
+        [Tooltip("How many times the player is able to cling.")]
+        public int ClingAmount = 1;
+        public int _currentClingAmount = 1;
+        
         [Header("Player Grounded")]
         [Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
         public bool Grounded = true;
@@ -96,6 +112,7 @@ namespace StarterAssets
         private int _animIDGrounded;
         private int _animIDJump;
         private int _animIDFreeFall;
+        private int _animIDWallCling;
         private int _animIDMotionSpeed;
 
 #if ENABLE_INPUT_SYSTEM 
@@ -150,12 +167,15 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+            _currentClingAmount = ClingAmount;
+            _currentClingTime = ClingTime;
         }
 
         private void Update()
         {
             _hasAnimator = TryGetComponent(out _animator);
 
+            ClingCheck();
             JumpAndGravity();
             GroundedCheck();
             Move();
@@ -172,22 +192,90 @@ namespace StarterAssets
             _animIDGrounded = Animator.StringToHash("Grounded");
             _animIDJump = Animator.StringToHash("Jump");
             _animIDFreeFall = Animator.StringToHash("FreeFall");
+            _animIDWallCling = Animator.StringToHash("IsClinging");
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
         }
 
         private void GroundedCheck()
         {
+            if (Clinging) return;
             // set sphere position, with offset
             Vector3 spherePosition = new Vector3(transform.position.x, transform.position.y - GroundedOffset,
                 transform.position.z);
             Grounded = Physics.CheckSphere(spherePosition, GroundedRadius, GroundLayers,
                 QueryTriggerInteraction.Ignore);
-
+            if (Grounded)
+                _currentClingAmount = ClingAmount;
             // update animator if using character
             if (_hasAnimator)
             {
                 _animator.SetBool(_animIDGrounded, Grounded);
             }
+        }
+
+        private void ClingCheck()
+        {
+            float _checkDist = 0.5f;
+            // If grounded, do nothing
+            if (Grounded) return;
+
+            // Check for wall in forward direction
+            RaycastHit hit;
+            // Does the ray intersect any objects excluding the player layer
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, _checkDist))
+
+            {
+                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
+                if(!Clinging)
+                    Cling();
+            }
+            else
+            {
+                Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * _checkDist, Color.white);
+                CanCling = true;
+                Uncling();
+            }
+
+            if (Clinging)
+            {
+                _currentClingTime -= Time.deltaTime;
+
+                if (_currentClingTime <= 0)
+                {
+                    _currentClingTime = ClingTime;
+                    Uncling();
+                }
+            }
+        }
+
+        private void Cling()
+        {
+            if (_currentClingAmount <= 0) return;
+            CanCling = false;
+            Clinging = true;
+            if (_hasAnimator)
+            {
+                _animator.SetBool(_animIDWallCling, true);
+                _animator.SetBool(_animIDJump, false);
+            }
+
+            _verticalVelocity = 0;
+            _currentClingAmount--;
+            _currentGravity = 0;
+            _jumpTimeoutDelta = JumpTimeout;
+        }
+
+        private void Uncling()
+        {
+            if (!Clinging) return;
+            Clinging = false;
+            if (_hasAnimator)
+            {
+                _animator.SetBool(_animIDWallCling, false);
+            }
+
+            _currentClingTime = ClingTime;
+            _currentGravity = Gravity;
         }
 
         private void CameraRotation()
@@ -223,7 +311,7 @@ namespace StarterAssets
             if (_input.move == Vector2.zero) targetSpeed = 0.0f;
 
             // a reference to the players current horizontal velocity
-            float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, 0.0f).magnitude;
+            float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.y).magnitude;
 
             float speedOffset = 0.1f;
             float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
@@ -249,7 +337,7 @@ namespace StarterAssets
             if (_animationBlend < 0.01f) _animationBlend = 0f;
 
             // normalise input direction
-            Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, 0.0f).normalized;
+            Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
 
             // note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
             // if there is a move input rotate player when the player is moving
@@ -268,8 +356,18 @@ namespace StarterAssets
             Vector3 targetDirection = Quaternion.Euler(0.0f, _targetRotation, 0.0f) * Vector3.forward;
 
             // move the player
-            _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
-                             new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            if (!Clinging)
+            {
+                _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
+                                 new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            }
+            else
+            {
+                targetDirection.z *= -1;
+                //Vector3 moveDir = ;
+                _controller.Move(targetDirection.normalized * (_speed * Time.deltaTime) +
+                                 new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
+            }
 
             // update animator if using character
             if (_hasAnimator)
@@ -281,7 +379,7 @@ namespace StarterAssets
 
         private void JumpAndGravity()
         {
-            if (Grounded)
+            if (Grounded || Clinging)
             {
                 // reset the fall timeout timer
                 _fallTimeoutDelta = FallTimeout;
@@ -302,8 +400,16 @@ namespace StarterAssets
                 // Jump
                 if (_input.jump && _jumpTimeoutDelta <= 0.0f)
                 {
-                    // the square root of H * -2 * G = how much velocity needed to reach desired height
-                    _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+                    if (Clinging)
+                    {
+                        Uncling();
+                        _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * _currentGravity);
+                    }
+                    else
+                    {
+                        // the square root of H * -2 * G = how much velocity needed to reach desired height
+                        _verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * _currentGravity);
+                    }
 
                     // update animator if using character
                     if (_hasAnimator)
@@ -344,7 +450,7 @@ namespace StarterAssets
             // apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
             if (_verticalVelocity < _terminalVelocity)
             {
-                _verticalVelocity += Gravity * Time.deltaTime;
+                _verticalVelocity += _currentGravity * Time.deltaTime;
             }
         }
 
