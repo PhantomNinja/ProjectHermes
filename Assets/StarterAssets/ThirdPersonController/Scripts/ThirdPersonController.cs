@@ -51,12 +51,14 @@ namespace StarterAssets
         [Header("Player Clinging")]
         [Tooltip("If the character is clinging to a wall or not.")]
         public bool Clinging = false;
-        [Tooltip("Determines if the character is able to cling to a wall or not.")]
-        public bool CanCling = false;
         
         [Tooltip("How long the player is able to cling.")]
         public float ClingTime = 0.5f;
         private float _currentClingTime = 0.5f;
+
+        [Tooltip("How long before the player is able to cling again.")]
+        public float ClingTimeOut = 0.1f;
+        private float _currentClingTimeOut = 0.5f;
         
         [Tooltip("How many times the player is able to cling.")]
         public int ClingAmount = 1;
@@ -139,7 +141,6 @@ namespace StarterAssets
             }
         }
 
-
         private void Awake()
         {
             // get a reference to our main camera
@@ -169,6 +170,7 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
             _currentClingAmount = ClingAmount;
             _currentClingTime = ClingTime;
+            _currentClingTimeOut = ClingTimeOut;
         }
 
         private void Update()
@@ -219,6 +221,10 @@ namespace StarterAssets
             // If grounded, do nothing
             if (Grounded) return;
 
+            //Cling Timeout Countdown
+            if(_currentClingTime >= 0)
+                _currentClingTimeOut -= Time.deltaTime;
+
             // Check for wall in forward direction
             RaycastHit hit;
             // Does the ray intersect any objects excluding the player layer
@@ -232,7 +238,6 @@ namespace StarterAssets
             else
             {
                 Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * _checkDist, Color.white);
-                CanCling = true;
                 Uncling();
             }
 
@@ -250,8 +255,7 @@ namespace StarterAssets
 
         private void Cling()
         {
-            if (_currentClingAmount <= 0) return;
-            CanCling = false;
+            if (_currentClingAmount <= 0 || _currentClingTimeOut > 0) return;
             Clinging = true;
             if (_hasAnimator)
             {
@@ -269,6 +273,7 @@ namespace StarterAssets
         {
             if (!Clinging) return;
             Clinging = false;
+
             if (_hasAnimator)
             {
                 _animator.SetBool(_animIDWallCling, false);
@@ -276,6 +281,7 @@ namespace StarterAssets
 
             _currentClingTime = ClingTime;
             _currentGravity = Gravity;
+            _currentClingTimeOut = ClingTimeOut;
         }
 
         private void CameraRotation()
