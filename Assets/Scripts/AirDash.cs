@@ -28,7 +28,6 @@ public class AirDash : MonoBehaviour
         if (dashAction.WasCompletedThisFrame())
         {
             Debug.Log("Player Dashed");
-            characterController.SimpleMove(new Vector3(dashSpeed, 0, 0));
         }
     }
 }
