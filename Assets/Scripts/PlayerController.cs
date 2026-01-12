@@ -7,7 +7,7 @@ using UnityEngine.Windows;
 // using some aspects of sethpoly celeste-character-controller
 public class PlayerController : MonoBehaviour
 {
-
+    public static PlayerController instance;
     [HideInInspector]
     [Header("Player")]
     public Rigidbody rb;
@@ -29,6 +29,8 @@ public class PlayerController : MonoBehaviour
     public float wallJumpLerp = 5;
     public float dashSpeed = 8;
     public float defaultGravity = 8;
+    [HideInInspector]
+    public float gravityScale = 1;
 
     [Space]
     [Header("Booleans")]
@@ -36,13 +38,11 @@ public class PlayerController : MonoBehaviour
     public bool wallGrab;
     public bool wallJumped;
     public bool wallSlide;
-    public bool isDashing;
 
 
 
     [Space]
     public bool isGrounded;
-    private bool hasDashed;
     private bool hasDoubleJumped;
 
     // planning on updating animation enum in this script and having an animator script read from it
@@ -52,10 +52,20 @@ public class PlayerController : MonoBehaviour
         running,
         jumping,
         falling,
-        bugged
+        dashing,
     }
     animationEnum currentAnimation;
-
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -66,6 +76,10 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+
+        // set gravity for frame calculations
+        defaultGravity = defaultGravity * gravityScale;
+        
         groundCheck();
         float playerInput = moveAction.ReadValue<float>();
         run(playerInput);
@@ -111,7 +125,7 @@ public class PlayerController : MonoBehaviour
     {
         //switch this to flow smoother with enums and a switch statement. Don't need to be checking if we're grounded and the jump action was completed this frame if we are falling, different logic should be applied
 
-        if (isGrounded && jumpAction.WasCompletedThisFrame())
+        if (isGrounded && jumpAction.WasPerformedThisFrame())
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpHeight, rb.linearVelocity.z);
         }

@@ -599,13 +599,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   rb: {fileID: 0}
   SpeedChangeRate: 5
-  maxSpeed: 4
-  jumpHeight: 7
-  fallSpeedMax: 10
+  maxSpeed: 16
+  jumpHeight: 12
+  fallSpeedMax: 20
   slideSpeed: 1
   wallJumpLerp: 5
   dashSpeed: 8
-  defaultGravity: -2
+  defaultGravity: -15
   canMove: 0
   wallGrab: 0
   wallJumped: 0
