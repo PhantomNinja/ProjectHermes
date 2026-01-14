@@ -43,8 +43,7 @@ public class AirDash : MonoBehaviour
         isDashing = true;
         float originalGravity = player.defaultGravity;
         player.defaultGravity = 0f;
-        player.rb.linearVelocity = new Vector3(dashSpeed, 0, 0);
-
+        player.rb.linearVelocity = new Vector3(dashForce, 0, 0);
         yield return new WaitForSeconds(dashingTime);
         player.defaultGravity = originalGravity;
         isDashing=false;
