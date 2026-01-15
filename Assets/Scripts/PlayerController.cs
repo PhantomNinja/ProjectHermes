@@ -40,13 +40,13 @@ public class PlayerController : MonoBehaviour
     public bool wallSlide;
 
 
-
+    Coroutine currentAction;
     [Space]
     public bool isGrounded;
     private bool hasDoubleJumped;
-
+    
     // planning on updating animation enum in this script and having an animator script read from it
-    enum animationEnum
+    public enum animationEnum
     {
         idle,
         running,
@@ -54,9 +54,10 @@ public class PlayerController : MonoBehaviour
         falling,
         dashing,
     }
-    animationEnum currentAnimation;
+    public animationEnum currentAnimation;
     private void Awake()
     {
+        
         if (instance == null)
         {
             instance = this;
@@ -134,7 +135,7 @@ public class PlayerController : MonoBehaviour
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y + (defaultGravity * Time.deltaTime), rb.linearVelocity.z);
         }
     }
-
+    
     void groundCheck() {
         RaycastHit hit;
         if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), Vector3.down, out hit, 1.0f))
@@ -148,5 +149,10 @@ public class PlayerController : MonoBehaviour
             Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), Vector3.down, Color.yellow);
     }
 
-
+    public void updateCoroutine(Coroutine startRoutine)
+    {
+        currentAction = startRoutine;
+        Debug.Log(currentAction);
+        StartCoroutine("currentAction");
+    }
 }

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Linq.Expressions;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,7 +15,6 @@ public class AirDash : MonoBehaviour
     [Header("Dash variables")]
     private bool canDash = true;
     private bool isDashing;
-    
 
     [Header("Input Actions")]
     public InputAction dashAction;
@@ -24,40 +24,31 @@ public class AirDash : MonoBehaviour
     {
         player = PlayerController.instance;
         dashAction = InputSystem.actions.FindAction("AirDash");
-                 
     }
     
     // Update is called once per frame
     void Update()
     {
-        if (dashAction.WasCompletedThisFrame())
+        if (dashAction.WasCompletedThisFrame() && canDash)
         {
             StartCoroutine(Dash());
             Debug.Log("Player Dashed");
         }
     }
-
-    private IEnumerator Dash()
+    
+    public IEnumerator Dash()
     {
         canDash = false;
-        isDashing = true;
+        player.currentAnimation = PlayerController.animationEnum.dashing;
         float originalGravity = player.defaultGravity;
         player.defaultGravity = 0f;
         player.rb.linearVelocity = new Vector3(dashForce, 0, 0);
         yield return new WaitForSeconds(dashingTime);
         player.defaultGravity = originalGravity;
         isDashing=false;
+        player.currentAnimation= PlayerController.animationEnum.idle;
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }
-
-    //void Dash()
-    //{
-    //    Vector3 position = player.transform.position;
-    //    player.rb.linearVelocity = Vector3.zero;
-    //    Debug.Log(position + "player dash start position");
-    //    player.rb.linearVelocity = new Vector3(dashSpeed, 0, 0);
-    //    Debug.Log(position + "player dash end position");
-    //    player.defaultGravity = 0;
-    //}
+    
 }

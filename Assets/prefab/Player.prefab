@@ -357,6 +357,7 @@ GameObject:
   - component: {fileID: 2147279955704149323}
   - component: {fileID: 251492302797973160}
   - component: {fileID: 3980347950761289824}
+  - component: {fileID: 3267539230776995875}
   m_Layer: 6
   m_Name: PlayerController
   m_TagString: Player
@@ -479,6 +480,7 @@ MonoBehaviour:
   wallJumped: 0
   wallSlide: 0
   isGrounded: 0
+  currentAnimation: 0
 --- !u!114 &251492302797973160
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -491,7 +493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb1b5c131c88a95468c2d2bf41ee93a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AirDash
-  dashForce: 20
+  dashForce: 40
   dashingTime: 0.2
   dashCooldown: 1
   dashAction:
@@ -526,6 +528,18 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &3267539230776995875
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 745060685447058289}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c7313ce671049b40b1a7fc7473ca452, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &818191417477384610
 GameObject:
   m_ObjectHideFlags: 0
