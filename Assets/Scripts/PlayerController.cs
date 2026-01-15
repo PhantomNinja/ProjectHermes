@@ -44,7 +44,10 @@ public class PlayerController : MonoBehaviour
     [Space]
     public bool isGrounded;
     private bool hasDoubleJumped;
-    
+
+    private float lastDir;
+    private AirDash airDash;
+
     // planning on updating animation enum in this script and having an animator script read from it
     public enum animationEnum
     {
@@ -66,6 +69,8 @@ public class PlayerController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        airDash = GetComponent<AirDash>();
     }
     void Start()
     {
@@ -87,8 +92,10 @@ public class PlayerController : MonoBehaviour
         jump();
         
     }
-    private void run(float direction)
+    private void run(float currentDir)
     {
+        if (currentDir != 0)
+            lastDir = currentDir;
         // set target speed based on move speed, sprint speed and if sprint is pressed
         float targetSpeed = maxSpeed;
 
@@ -99,14 +106,14 @@ public class PlayerController : MonoBehaviour
 
         // a reference to the players current horizontal velocity
         float currentHorizontalSpeed = new Vector3(rb.linearVelocity.x, 0, rb.linearVelocity.z).magnitude;
-
         float speedOffset = 0.1f;
 
         // accelerate or decelerate to target speed
         
         
         if (currentHorizontalSpeed < targetSpeed - speedOffset ||
-            currentHorizontalSpeed > targetSpeed + speedOffset)
+            currentHorizontalSpeed > targetSpeed + speedOffset ||
+            airDash.isDashing)
         {
             // creates curved result rather than a linear one giving a more organic speed change
             // note T in Lerp is clamped, so we don't need to clamp our speed
@@ -114,12 +121,15 @@ public class PlayerController : MonoBehaviour
 
             // round speed to 3 decimal places
             targetSpeed = Mathf.Round(targetSpeed * 1000f) / 1000f;
-            rb.linearVelocity = new Vector3(targetSpeed * direction, rb.linearVelocity.y, 0);
+            if(airDash.isDashing == false)
+                rb.linearVelocity = new Vector3(targetSpeed * currentDir, rb.linearVelocity.y, 0);
+            else
+                rb.linearVelocity = new Vector3(targetSpeed * lastDir, rb.linearVelocity.y, 0);
         }
         else
         {
             // sets player velocity to 0 with no input
-            rb.linearVelocity = new Vector3(targetSpeed * direction, rb.linearVelocity.y, 0);
+            rb.linearVelocity = new Vector3(targetSpeed * currentDir, rb.linearVelocity.y, 0);
         }
     }
     private void jump()

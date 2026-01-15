@@ -14,7 +14,7 @@ public class AirDash : MonoBehaviour
     public float dashCooldown = 1.0f;
     [Header("Dash variables")]
     private bool canDash = true;
-    private bool isDashing;
+    public bool isDashing { private set; get; }
 
     [Header("Input Actions")]
     public InputAction dashAction;
@@ -39,6 +39,7 @@ public class AirDash : MonoBehaviour
     public IEnumerator Dash()
     {
         canDash = false;
+        isDashing = true;
         player.currentAnimation = PlayerController.animationEnum.dashing;
         float originalGravity = player.defaultGravity;
         player.defaultGravity = 0f;
@@ -50,5 +51,4 @@ public class AirDash : MonoBehaviour
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }
-    
 }
