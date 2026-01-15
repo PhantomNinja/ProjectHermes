@@ -96,6 +96,10 @@ public class PlayerController : MonoBehaviour
     {
         if (currentDir != 0)
             lastDir = currentDir;
+        // transforms player to face towards direction of movement
+        if (currentDir != 0) {
+            transform.localScale = new Vector3(currentDir, transform.localScale.y, transform.localScale.z); 
+        }
         // set target speed based on move speed, sprint speed and if sprint is pressed
         float targetSpeed = maxSpeed;
 
