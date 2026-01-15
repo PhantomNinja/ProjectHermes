@@ -1,19 +1,19 @@
 using UnityEngine;
 
-public class FadingPlatform : MonoBehaviour
+public class FadingPlatform : HermesObject
 {
     [Tooltip("A number between 0 - 1")]
     public float FadedAlphaValue;
     public Renderer[] Renderers;
 
-    private void Start()
+    public override void StartObject()
     {
         FadeOut();
+        base.StartObject();
     }
 
     public void FadeOut()
     {
-        Debug.Log("Fade Out");
         foreach (Renderer renderer in Renderers)
         {
             Color newColor = renderer.material.color;
@@ -25,7 +25,6 @@ public class FadingPlatform : MonoBehaviour
 
     public void FadeIn()
     {
-        Debug.Log("Fade In");
         foreach (Renderer renderer in Renderers)
         {
             Color newColor = renderer.material.color;
@@ -34,5 +33,11 @@ public class FadingPlatform : MonoBehaviour
         }
 
         GetComponent<BoxCollider>().enabled = true;
+    }
+
+    public override void ResetObject()
+    {
+        FadeOut();
+        base.ResetObject();
     }
 }

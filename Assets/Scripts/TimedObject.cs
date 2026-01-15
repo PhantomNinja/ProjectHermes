@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class TimedObject : MonoBehaviour
+public class TimedObject : HermesObject
 {
     [Tooltip("How long is the object on for")]
     public float OnTime;
@@ -11,21 +11,26 @@ public class TimedObject : MonoBehaviour
     private FadingPlatform fPlat;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public override void StartObject()
     {
         mObject = GetComponent<MovingObject>();
-        if(mObject)
+        if (mObject)
+        {
             mObject.ObjectIsOn = false;
+            mObject.objectIsOn = false;
+        }
         fPlat = GetComponent<FadingPlatform>();
+        if(fPlat) fPlat.StartObject();
+
+        base.StartObject();
     }
 
     // Update is called once per frame
-    void Update()
+    public override void UpdateObject()
     {
         if (onTime <= 0) return;
 
         onTime -= Time.deltaTime;
-        Debug.Log(onTime);
         if(onTime <= 0)
         {
             ToggleObject();
@@ -38,12 +43,17 @@ public class TimedObject : MonoBehaviour
         ToggleObject();
     }
 
+    public override void ResetObject()
+    {
+        base.ResetObject();
+    }
+
     void ToggleObject()
     {
         IsRunning = !IsRunning;
         if (mObject)
         {
-            mObject.ObjectIsOn = IsRunning;
+            mObject.objectIsOn = IsRunning;
             mObject.MoveTime = OnTime;
         }
         if (fPlat)

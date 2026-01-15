@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HarmfulObject : MonoBehaviour
+public class HarmfulObject : HermesObject
 {
     private void OnCollisionEnter(Collision collision)
     {
