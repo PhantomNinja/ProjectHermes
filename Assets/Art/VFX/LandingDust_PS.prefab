@@ -9,6 +9,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 1433374308097456494, guid: cf72b118906943f448961fc54b220d65, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1433374308097456494, guid: cf72b118906943f448961fc54b220d65, type: 3}
       propertyPath: ShapeModule.radius.value
       value: 1
       objectReference: {fileID: 0}
@@ -58,7 +62,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5917478597412449047, guid: cf72b118906943f448961fc54b220d65, type: 3}
       propertyPath: m_Name
-      value: Landing_DustVFX Variant
+      value: Landing_DustVFX
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

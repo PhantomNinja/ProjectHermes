@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1433374308097456494}
   - component: {fileID: 9009649226818221081}
   m_Layer: 0
-  m_Name: Walking_Dust
+  m_Name: WalkingDust_PS
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
