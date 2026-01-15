@@ -12,10 +12,9 @@ public class ActivationObject : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Hit");
+        if (TimedObject.IsRunning) return;
         if(other.tag == "Player")
         {
-            Debug.Log("Active");
             ActivateObject();
         }
     }

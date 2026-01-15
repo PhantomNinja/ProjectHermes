@@ -1,11 +1,12 @@
+using System.Collections;
 using UnityEngine;
 
 public class TimedObject : MonoBehaviour
 {
     [Tooltip("How long is the object on for")]
     public float OnTime;
+    public bool IsRunning { private set; get; }
     private float onTime;
-
     private MovingObject mObject;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -39,5 +40,6 @@ public class TimedObject : MonoBehaviour
         {
             mObject.ObjectIsOn = !mObject.ObjectIsOn;
         }
+        IsRunning = !IsRunning;
     }
 }
