@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8144778546134799444}
   - component: {fileID: 813737185023675454}
+  - component: {fileID: 7014970943017015329}
   m_Layer: 0
   m_Name: Moving Platform
   m_TagString: Untagged
@@ -45,10 +46,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12cebe154760a1349960bb0008037c3d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MovingPlatform
+  CheckArea: 0
   ObjectIsOn: 1
+  objectIsOn: 1
   MoveDirection: {x: 0, y: 1}
+  moveDirection: {x: 0, y: 0}
   MoveSpeed: 1
   MoveTime: 5
+--- !u!65 &7014970943017015329
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8468403710214728779}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.8928967, y: 0.5999993, z: 1}
+  m_Center: {x: -0.02835083, y: -0.20000035, z: 0}
 --- !u!1001 &1492069507206689187
 PrefabInstance:
   m_ObjectHideFlags: 0
