@@ -35,6 +35,13 @@ public class FadingPlatform : HermesObject
         GetComponent<BoxCollider>().enabled = true;
     }
 
+    public void Toggle()
+    {
+        if (GetComponent<BoxCollider>().enabled)
+            FadeOut();
+        else FadeIn();
+    }
+
     public override void ResetObject()
     {
         FadeOut();
