@@ -372,6 +372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2ab6c6735b4b3de4aa272e1f6bcd6f06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHUDManager
+  MainTimer_TXT: {fileID: 773557707889376306}
   ActiveTimerHolders_PRNT: {fileID: 4449921772690093187}
   ActiveTimerHolder_PRFB: {fileID: 1236208287191862070, guid: d9acb828db78a3543a4c50e55641a3a8, type: 3}
 --- !u!1 &5015080413991120518

@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager Instance;
     public ObjectsManager ObjectsManager;
     public PlayerHUDManager PlayerHUDManager;
     // X = Seconds | Y = Minutes
@@ -9,6 +10,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
+        Instance = this;
         ObjectsManager.WakeUpManager();
         PlayerHUDManager.WakeUpManager();
     }
@@ -34,7 +36,8 @@ public class GameManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        PlayerHUDManager.UpdateManager();
+        Debug.Log(MainTimer.ToString());
+        PlayerHUDManager.UpdateManager(MainTimer);
     }
 
     private void FixedUpdate()
