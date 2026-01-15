@@ -8,11 +8,15 @@ public class TimedObject : MonoBehaviour
     public bool IsRunning { private set; get; }
     private float onTime;
     private MovingObject mObject;
+    private FadingPlatform fPlat;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         mObject = GetComponent<MovingObject>();
+        if(mObject)
+            mObject.ObjectIsOn = false;
+        fPlat = GetComponent<FadingPlatform>();
     }
 
     // Update is called once per frame
@@ -36,10 +40,16 @@ public class TimedObject : MonoBehaviour
 
     void ToggleObject()
     {
+        IsRunning = !IsRunning;
         if (mObject)
         {
-            mObject.ObjectIsOn = !mObject.ObjectIsOn;
+            mObject.ObjectIsOn = IsRunning;
+            mObject.MoveTime = OnTime;
         }
-        IsRunning = !IsRunning;
+        if (fPlat)
+        {
+            if(IsRunning) fPlat.FadeIn();
+            else fPlat.FadeOut();
+        }
     }
 }
