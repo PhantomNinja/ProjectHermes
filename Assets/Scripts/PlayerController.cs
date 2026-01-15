@@ -21,23 +21,18 @@ public class PlayerController : MonoBehaviour
 
     [Space]
     [Header("Stats")]
-    public float SpeedChangeRate = 5.0f;
-    public float maxSpeed = 4;
-    public float jumpHeight = 7;
-    public float fallSpeedMax = 10;
-    public float slideSpeed = 1;
-    public float wallJumpLerp = 5;
-    public float dashSpeed = 8;
-    public float defaultGravity = 8;
+    public float SpeedChangeRate;
+    public float maxSpeed;
+    public float jumpHeight;
+    public float fallSpeedMax;
+    public float defaultGravity;
     [HideInInspector]
     public float gravityScale = 1;
 
     [Space]
     [Header("Booleans")]
     public bool canMove;
-    public bool wallGrab;
-    public bool wallJumped;
-    public bool wallSlide;
+
 
 
     Coroutine currentAction;
@@ -45,7 +40,8 @@ public class PlayerController : MonoBehaviour
     public bool isGrounded;
     private bool hasDoubleJumped;
 
-    private float lastDir;
+    public float direction { private set; get; }
+    public float lastDirection { private set; get; }
     private AirDash airDash;
 
     // planning on updating animation enum in this script and having an animator script read from it
@@ -56,6 +52,7 @@ public class PlayerController : MonoBehaviour
         jumping,
         falling,
         dashing,
+        climbing,
     }
     public animationEnum currentAnimation;
     private void Awake()
@@ -82,24 +79,29 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-
+        
         // set gravity for frame calculations
-        defaultGravity = defaultGravity * gravityScale;
         
         groundCheck();
-        float playerInput = moveAction.ReadValue<float>();
-        run(playerInput);
+        direction = moveAction.ReadValue<float>();
+        if (direction != 0) {
+            lastDirection = direction;
+        }
+        if (canMove)
+        {
+            run(direction);
+        }
         jump();
         
     }
     private void run(float currentDir)
     {
         if (currentDir != 0)
-            lastDir = currentDir;
-        // transforms player to face towards direction of movement
-        if (currentDir != 0) {
-            transform.localScale = new Vector3(currentDir, transform.localScale.y, transform.localScale.z); 
+        {
+            // transforms player to face towards direction of movement
+            transform.localScale = new Vector3(currentDir, transform.localScale.y, transform.localScale.z);
         }
+
         // set target speed based on move speed, sprint speed and if sprint is pressed
         float targetSpeed = maxSpeed;
 
@@ -116,8 +118,7 @@ public class PlayerController : MonoBehaviour
         
         
         if (currentHorizontalSpeed < targetSpeed - speedOffset ||
-            currentHorizontalSpeed > targetSpeed + speedOffset ||
-            airDash.isDashing)
+            currentHorizontalSpeed > targetSpeed + speedOffset)
         {
             // creates curved result rather than a linear one giving a more organic speed change
             // note T in Lerp is clamped, so we don't need to clamp our speed
@@ -125,10 +126,11 @@ public class PlayerController : MonoBehaviour
 
             // round speed to 3 decimal places
             targetSpeed = Mathf.Round(targetSpeed * 1000f) / 1000f;
-            if(airDash.isDashing == false)
-                rb.linearVelocity = new Vector3(targetSpeed * currentDir, rb.linearVelocity.y, 0);
-            else
-                rb.linearVelocity = new Vector3(targetSpeed * lastDir, rb.linearVelocity.y, 0);
+            rb.linearVelocity = new Vector3(targetSpeed * currentDir, rb.linearVelocity.y, 0);
+
+            //if(airDash.isDashing == false)
+            //else
+            //    rb.linearVelocity = new Vector3(targetSpeed * lastDirection, rb.linearVelocity.y, 0);
         }
         else
         {
@@ -146,7 +148,7 @@ public class PlayerController : MonoBehaviour
         }
         if (rb.linearVelocity.y < fallSpeedMax)
         {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y + (defaultGravity * Time.deltaTime), rb.linearVelocity.z);
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, rb.linearVelocity.y + (defaultGravity * gravityScale * Time.deltaTime), rb.linearVelocity.z);
         }
     }
     
