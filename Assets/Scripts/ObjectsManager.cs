@@ -1,15 +1,17 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class ObjectsManager : MonoBehaviour
 {
+    public static ObjectsManager Instance;
+
     public TimedObject[] TimedObjects;
     public MovingObject[] MovingObjects;
     public HarmfulObject[] HarmfulObjects;
 
     public void WakeUpManager()
     {
+        Instance = this;
         TimedObjects = FindObjectsByType<TimedObject>(FindObjectsSortMode.None);
         MovingObjects = FindObjectsByType<MovingObject>(FindObjectsSortMode.None);
         HarmfulObjects = FindObjectsByType<HarmfulObject>(FindObjectsSortMode.None);
@@ -56,18 +58,21 @@ public class ObjectsManager : MonoBehaviour
 
     public void ResetObjects()
     {
-
+        int currArea = CheckpointManager.Instance.CheckArea;
         foreach (var obj in TimedObjects)
         {
-            obj.ResetObject();
+            if(obj.CheckArea == currArea)
+                obj.ResetObject();
         }
         foreach (var obj in MovingObjects)
         {
-            obj.ResetObject();
+            if (obj.CheckArea == currArea)
+                obj.ResetObject();
         }
         foreach (var obj in HarmfulObjects)
         {
-            obj.ResetObject();
+            if (obj.CheckArea == currArea)
+                obj.ResetObject();
         }
     }
 }

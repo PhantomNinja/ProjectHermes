@@ -5,6 +5,7 @@ public class CheckpointManager : MonoBehaviour
     public GameObject Player;
     public static CheckpointManager Instance;
     public Checkpoint currentCheckpoint;
+    public int CheckArea;
 
     private void Awake()
     {
@@ -14,5 +15,6 @@ public class CheckpointManager : MonoBehaviour
     public void LoadCurrentCheckpoint()
     {
         Player.transform.position = currentCheckpoint.transform.position;
+        ObjectsManager.Instance.ResetObjects();
     }
 }

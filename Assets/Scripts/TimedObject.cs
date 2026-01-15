@@ -18,9 +18,14 @@ public class TimedObject : HermesObject
         {
             mObject.ObjectIsOn = false;
             mObject.objectIsOn = false;
+            mObject.CheckArea = CheckArea;
         }
         fPlat = GetComponent<FadingPlatform>();
-        if(fPlat) fPlat.StartObject();
+        if (fPlat)
+        {
+            fPlat.StartObject();
+            fPlat.CheckArea = CheckArea;
+        }
 
         base.StartObject();
     }
@@ -45,7 +50,10 @@ public class TimedObject : HermesObject
 
     public override void ResetObject()
     {
-        base.ResetObject();
+        if(fPlat)
+            fPlat.ResetObject();
+        else if(mObject == null)
+            base.ResetObject();
     }
 
     void ToggleObject()

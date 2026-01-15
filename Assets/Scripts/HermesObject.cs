@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class HermesObject : MonoBehaviour
 {
+    [Tooltip("The area the object is in")]
+    public int CheckArea;
     private Vector3 startPos;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
