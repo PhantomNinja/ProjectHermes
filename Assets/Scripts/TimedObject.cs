@@ -4,15 +4,15 @@ using UnityEngine;
 public class TimedObject : HermesObject
 {
     [Tooltip("How long is the object on for")]
-    public float OnTime;
+    public float ActiveTime;
     public bool IsRunning { private set; get; }
-    private float onTime;
+    public float activeTime { private set; get; } 
     private MovingObject mObject;
     private FadingPlatform fPlat;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public override void StartObject()
     {
+        // Update Manager with Active Timer
         mObject = GetComponent<MovingObject>();
         if (mObject)
         {
@@ -30,13 +30,12 @@ public class TimedObject : HermesObject
         base.StartObject();
     }
 
-    // Update is called once per frame
     public override void UpdateObject()
     {
-        if (onTime <= 0) return;
+        if (activeTime <= 0) return;
 
-        onTime -= Time.deltaTime;
-        if(onTime <= 0)
+        activeTime -= Time.deltaTime;
+        if(activeTime <= 0)
         {
             ToggleObject();
         }
@@ -44,7 +43,8 @@ public class TimedObject : HermesObject
 
     public void ActivateObject()
     {
-        onTime = OnTime;
+        PlayerHUDManager.Instance.AddTimer(this);
+        activeTime = ActiveTime;
         ToggleObject();
     }
 
@@ -62,7 +62,7 @@ public class TimedObject : HermesObject
         if (mObject)
         {
             mObject.objectIsOn = IsRunning;
-            mObject.MoveTime = OnTime;
+            mObject.MoveTime = ActiveTime;
         }
         if (fPlat)
         {
