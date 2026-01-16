@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour
 
     private void LateUpdate()
     {
-        Debug.Log(MainTimer.ToString());
         PlayerHUDManager.UpdateManager(MainTimer);
     }
 
