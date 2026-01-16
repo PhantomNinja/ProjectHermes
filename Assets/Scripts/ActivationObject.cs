@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.TextCore;
 
 public class ActivationObject : HermesObject
 {
@@ -18,7 +19,8 @@ public class ActivationObject : HermesObject
             else
                 FadingPlatform.FadeOut();
 
-            FadingPlatform.GetComponent<MovingObject>().ObjectIsOn = OnByDefault;
+            if(FadingPlatform.GetComponent<MovingObject>() != null)
+                FadingPlatform.GetComponent<MovingObject>().ObjectIsOn = OnByDefault;
         }
     }
 
