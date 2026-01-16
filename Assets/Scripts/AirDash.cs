@@ -40,14 +40,19 @@ public class AirDash : MonoBehaviour
     {
         canDash = false;
         isDashing = true;
+        player.canMove = false;
         player.currentAnimation = PlayerController.animationEnum.dashing;
-        float originalGravity = player.defaultGravity;
-        player.defaultGravity = 0f;
-        player.rb.linearVelocity = new Vector3(dashForce, 0, 0);
+        player.gravityScale = 0f;
+        player.rb.linearVelocity = new Vector3(dashForce * player.lastDirection, 0, 0);
+
+
         yield return new WaitForSeconds(dashingTime);
-        player.defaultGravity = originalGravity;
+        player.gravityScale = 1.0f;
         isDashing=false;
+        player.canMove = true;
         player.currentAnimation= PlayerController.animationEnum.idle;
+
+
         yield return new WaitForSeconds(dashCooldown);
         canDash = true;
     }
