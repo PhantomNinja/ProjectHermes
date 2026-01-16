@@ -5,6 +5,22 @@ public class ActivationObject : HermesObject
     [Tooltip("This is the object to activate")]
     public TimedObject TimedObject;
     public FadingPlatform FadingPlatform;
+    public bool OnByDefault = false;
+
+    public override void StartObject()
+    {
+        base.StartObject();
+        if (FadingPlatform)
+        {
+            FadingPlatform.StartObject();
+            if(OnByDefault)
+                FadingPlatform.FadeIn();
+            else
+                FadingPlatform.FadeOut();
+
+            FadingPlatform.GetComponent<MovingObject>().ObjectIsOn = OnByDefault;
+        }
+    }
 
     public void ActivateObject()
     {

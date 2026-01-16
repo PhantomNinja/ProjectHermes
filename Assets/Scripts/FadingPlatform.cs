@@ -6,9 +6,12 @@ public class FadingPlatform : HermesObject
     public float FadedAlphaValue;
     public Renderer[] Renderers;
 
+    private MovingObject movingObject;
+
     public override void StartObject()
     {
         FadeOut();
+        movingObject = GetComponent<MovingObject>();
         base.StartObject();
     }
 
@@ -19,6 +22,10 @@ public class FadingPlatform : HermesObject
             Color newColor = renderer.material.color;
             newColor.a = FadedAlphaValue; // newAlphaValue is a float between 0 and 1
             renderer.material.color = newColor;
+        }
+        if (movingObject)
+        {
+            movingObject.objectIsOn = false;
         }
         GetComponent<BoxCollider>().enabled = false;
     }
@@ -31,7 +38,10 @@ public class FadingPlatform : HermesObject
             newColor.a = 1; // newAlphaValue is a float between 0 and 1
             renderer.material.color = newColor;
         }
-
+        if (movingObject)
+        {
+            movingObject.objectIsOn = false;
+        }
         GetComponent<BoxCollider>().enabled = true;
     }
 
@@ -39,7 +49,12 @@ public class FadingPlatform : HermesObject
     {
         if (GetComponent<BoxCollider>().enabled)
             FadeOut();
-        else FadeIn();
+        else 
+            FadeIn();
+
+        if (movingObject)
+            movingObject.objectIsOn = GetComponent<BoxCollider>().enabled;
+        Debug.Log(movingObject.objectIsOn);
     }
 
     public override void ResetObject()

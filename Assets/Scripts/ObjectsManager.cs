@@ -8,7 +8,7 @@ public class ObjectsManager : MonoBehaviour
     public TimedObject[] TimedObjects;
     public MovingObject[] MovingObjects;
     public HarmfulObject[] HarmfulObjects;
-    public ActivationObject[] ActivationObject;
+    public ActivationObject[] ActivationObjects;
 
     public void WakeUpManager()
     {
@@ -16,13 +16,17 @@ public class ObjectsManager : MonoBehaviour
         TimedObjects = FindObjectsByType<TimedObject>(FindObjectsSortMode.None);
         MovingObjects = FindObjectsByType<MovingObject>(FindObjectsSortMode.None);
         HarmfulObjects = FindObjectsByType<HarmfulObject>(FindObjectsSortMode.None);
-        ActivationObject = FindObjectsByType<ActivationObject>(FindObjectsSortMode.None);
+        ActivationObjects = FindObjectsByType<ActivationObject>(FindObjectsSortMode.None);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void StartManager()
     {
         foreach (var obj in TimedObjects)
+        {
+            obj.StartObject();
+        }
+        foreach (var obj in ActivationObjects)
         {
             obj.StartObject();
         }
@@ -76,7 +80,7 @@ public class ObjectsManager : MonoBehaviour
             if (obj.CheckArea == currArea)
                 obj.ResetObject();
         }
-        foreach (var obj in ActivationObject)
+        foreach (var obj in ActivationObjects)
         {
             if (obj.CheckArea == currArea)
                 obj.ResetObject();
