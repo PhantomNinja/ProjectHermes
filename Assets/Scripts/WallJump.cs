@@ -31,12 +31,16 @@ public class WallJump : MonoBehaviour
         //Calculate using the center of the GameObject's Collider(could also just use the GameObject's position), half the GameObject's size, the direction, the GameObject's rotation, and the maximum distance as variables.
         //Also fetch the hit data
         m_HitDetect = Physics.BoxCast(wallCheck.transform.position, wallCheckBoxSize * 0.5f, wallCheck.transform.forward, out m_Hit, wallCheck.transform.rotation, m_MaxDistance, wallLayer);
+        if (m_HitDetect) 
+            Debug.Log("hit" + m_Hit.collider.name);
         return m_HitDetect;
     }
     private void WallSlide()
     {
-        if (isWall() && player.isGrounded && player.direction != 0.0f)
+        
+        if (isWall() && !player.isGrounded && player.direction != 0.0f)
         {
+            player.canMove = false;
             isWallSliding = true;
             player.rb.linearVelocity = new Vector3(0, Mathf.Clamp(player.rb.linearVelocity.y, -wallSlidingSpeed, float.MaxValue), player.rb.linearVelocity.z);
             player.gravityScale = 0.0f;
@@ -45,6 +49,7 @@ public class WallJump : MonoBehaviour
         }
         else
         {
+            player.canMove = true;
             isWallSliding = false;
             player.gravityScale = 1.0f;
         }
