@@ -54,7 +54,6 @@ public class FadingPlatform : HermesObject
 
         if (movingObject)
             movingObject.objectIsOn = GetComponent<BoxCollider>().enabled;
-        Debug.Log(movingObject.objectIsOn);
     }
 
     public override void ResetObject()
