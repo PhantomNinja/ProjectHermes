@@ -40,7 +40,7 @@ public class PlayerController : MonoBehaviour
     public bool isGrounded;
     private bool hasDoubleJumped;
 
-    public float direction { private set; get; }
+    public float direction { set; get; }
     public float lastDirection { private set; get; }
     private AirDash airDash;
 
@@ -83,16 +83,18 @@ public class PlayerController : MonoBehaviour
         // set gravity for frame calculations
         
         groundCheck();
-        direction = moveAction.ReadValue<float>();
-        if (direction != 0) {
-            lastDirection = direction;
-        }
+
         if (canMove)
         {
+            direction = moveAction.ReadValue<float>();
+            if (direction != 0)
+            {
+                lastDirection = direction;
+            }
             run(direction);
+            jump();
         }
-        jump();
-        
+
     }
     private void run(float currentDir)
     {
@@ -128,9 +130,7 @@ public class PlayerController : MonoBehaviour
             targetSpeed = Mathf.Round(targetSpeed * 1000f) / 1000f;
             rb.linearVelocity = new Vector3(targetSpeed * currentDir, rb.linearVelocity.y, 0);
 
-            //if(airDash.isDashing == false)
-            //else
-            //    rb.linearVelocity = new Vector3(targetSpeed * lastDirection, rb.linearVelocity.y, 0);
+       
         }
         else
         {

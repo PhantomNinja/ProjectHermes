@@ -1,29 +1,43 @@
 using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class WallJump : MonoBehaviour
 {
 
-    public GameObject wallCheck;
-    [SerializeField] LayerMask wallLayer;
-    [SerializeField] Vector3 wallCheckBoxSize;
-    [SerializeField] float m_MaxDistance;
+    InputAction jumpAction;
     bool m_HitDetect;
     RaycastHit m_Hit;
     PlayerController player;
-    bool isWallSliding;
+    [SerializeField] bool isWallSliding;
+    [Header("Wall jump detection size")]
+    [SerializeField] LayerMask wallLayer;
+    [SerializeField] Vector3 wallCheckBoxSize;
+    [SerializeField] float m_MaxDistance;
+    public GameObject wallCheck;
+
+    [Space]
+    [Header("Wall Jump variables")]
     [SerializeField] float wallSlidingSpeed;
+    [SerializeField] bool isWallJumping;
+    [SerializeField] float wallJumpingDirection;
+    [SerializeField] float wallJumpingTime;
+    private float wallJumpingCounter;
+    [SerializeField] float wallJumpingDuration;
+    [SerializeField] Vector3 wallJumpingPower;
 
-    
 
-    private void Start()
+    void Start()
     {
+        jumpAction = InputSystem.actions.FindAction("Jump");
         player = PlayerController.instance;
     }
 
-    void FixedUpdate()
+    void Update()
     {
+
         WallSlide();
+        wallJump();
     }
     bool isWall()
     {
@@ -31,28 +45,62 @@ public class WallJump : MonoBehaviour
         //Calculate using the center of the GameObject's Collider(could also just use the GameObject's position), half the GameObject's size, the direction, the GameObject's rotation, and the maximum distance as variables.
         //Also fetch the hit data
         m_HitDetect = Physics.BoxCast(wallCheck.transform.position, wallCheckBoxSize * 0.5f, wallCheck.transform.forward, out m_Hit, wallCheck.transform.rotation, m_MaxDistance, wallLayer);
-        if (m_HitDetect) 
-            Debug.Log("hit" + m_Hit.collider.name);
+
         return m_HitDetect;
     }
     private void WallSlide()
     {
-        
+
         if (isWall() && !player.isGrounded && player.direction != 0.0f)
         {
-            player.canMove = false;
             isWallSliding = true;
-            player.rb.linearVelocity = new Vector3(0, Mathf.Clamp(player.rb.linearVelocity.y, -wallSlidingSpeed, float.MaxValue), player.rb.linearVelocity.z);
+            player.rb.linearVelocity = new Vector3(0, -wallSlidingSpeed, player.rb.linearVelocity.z);
             player.gravityScale = 0.0f;
-            Debug.Log("sliding");
             player.currentAnimation = PlayerController.animationEnum.climbing;
+            
         }
         else
         {
-            player.canMove = true;
             isWallSliding = false;
             player.gravityScale = 1.0f;
         }
+    }
+    private void wallJump()
+    {
+
+        if (isWallSliding)
+        {
+            isWallJumping = false;
+            wallJumpingDirection = -player.direction;
+            wallJumpingCounter = wallJumpingTime;
+        }
+        else
+        {
+            wallJumpingCounter -= Time.deltaTime;
+        }
+
+        if (jumpAction.WasPerformedThisFrame() && wallJumpingCounter > 0f)
+        {
+            Debug.Log("wallJump success");
+            player.canMove = false;
+            isWallJumping = true;
+            player.rb.linearVelocity = new Vector3(wallJumpingPower.x * wallJumpingDirection, wallJumpingPower.y, 0);
+            // set player direction 
+            player.transform.localScale = new Vector3(wallJumpingDirection, player.transform.localScale.y,player.transform.localScale.z);
+            player.direction = player.transform.localScale.x;
+        
+            wallJumpingCounter = 0f;
+
+            Invoke(nameof(stopWallJump), wallJumpingDuration);
+        }
+
+    }
+
+    private void stopWallJump()
+    {
+        Debug.Log("Stopped walljump");
+        isWallJumping = false;
+        player.canMove = true;
     }
     
     //Draw the BoxCast as a gizmo to show where it currently is testing. Click the Gizmos button to see this
