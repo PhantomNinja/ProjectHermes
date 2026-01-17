@@ -16,5 +16,6 @@ public class CheckpointManager : MonoBehaviour
     {
         Player.transform.position = currentCheckpoint.transform.position;
         ObjectsManager.Instance.ResetObjects();
+        PlayerHUDManager.Instance.RemoveTimers();
     }
 }
