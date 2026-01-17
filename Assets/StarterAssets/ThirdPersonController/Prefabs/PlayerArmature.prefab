@@ -1142,6 +1142,11 @@ MonoBehaviour:
   Gravity: -15
   JumpTimeout: 0.3
   FallTimeout: 0.15
+  Clinging: 0
+  ClingTime: 0.5
+  ClingTimeOut: 0.1
+  ClingAmount: 1
+  _currentClingAmount: 1
   Grounded: 1
   GroundedOffset: -0.14
   GroundedRadius: 0.28

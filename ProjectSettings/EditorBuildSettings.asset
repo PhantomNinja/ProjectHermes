@@ -15,6 +15,12 @@ EditorBuildSettings:
     path: Assets/Scenes/Official Maps/TestLevel2.unity
     guid: d00759d888b1ed142ae0077bd1fe6f50
   - enabled: 1
+    path: Assets/Scenes/Official Maps/TestLevel3.unity
+    guid: 8a5afaa30f7feaf49adc60d19b4042ab
+  - enabled: 1
+    path: Assets/Scenes/Official Maps/TestLevel4.unity
+    guid: 4fcf7621ff6f1624da330a7812e06a8a
+  - enabled: 1
     path: Assets/Scenes/LoadingScene.unity
     guid: 2ccb88a94725193479fe8355639e2bbf
   - enabled: 1

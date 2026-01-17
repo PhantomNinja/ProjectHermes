@@ -189,29 +189,33 @@ public class PlayerController : MonoBehaviour
         switch (currentAnimation)
         {
             case animationEnum.idle:
-                animator.SetBool(1, true);
+                animator.SetBool("isMoving", false);
                 break;
             case animationEnum.running:
-                animator.SetBool(1, true);
+                animator.SetBool("isMoving", true);
 
                 break;
             case animationEnum.climbing:
-                animator.SetBool(1, true);
-
+                // Not implemented
                 break;
             case animationEnum.falling:
-                animator.SetBool(1, true);
+                // Not implemented
 
                 break;
             case animationEnum.jumping:
-                animator.SetBool(1, true);
+                animator.SetBool("isJumping",true);
 
                 break;
             case animationEnum.dashing:
-                animator.SetBool(0, true);
-
+                animator.SetBool("isDashing", true);
                 break;
         }
+        Debug.Log(animator.GetBool("isMoving"));
+        Debug.Log(animator.GetBool("isRunning"));
+        Debug.Log(animator.GetBool("isJumping"));
+        Debug.Log(animator.GetBool("isDashing"));
+
+
     }
 
 
