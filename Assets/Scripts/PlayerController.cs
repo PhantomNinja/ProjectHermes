@@ -11,7 +11,8 @@ public class PlayerController : MonoBehaviour
     [HideInInspector]
     [Header("Player")]
     public Rigidbody rb;
-
+    public float groundCheckRayLength;
+    public Animator animator;
     [HideInInspector]
     [Header("Player Input Actions")]
     private InputAction moveAction;
@@ -94,7 +95,7 @@ public class PlayerController : MonoBehaviour
             run(direction);
             jump();
         }
-
+        playerAnimations();
     }
     private void run(float currentDir)
     {
@@ -117,8 +118,8 @@ public class PlayerController : MonoBehaviour
         float speedOffset = 0.1f;
 
         // accelerate or decelerate to target speed
-        
-        
+
+
         if (currentHorizontalSpeed < targetSpeed - speedOffset ||
             currentHorizontalSpeed > targetSpeed + speedOffset)
         {
@@ -129,13 +130,19 @@ public class PlayerController : MonoBehaviour
             // round speed to 3 decimal places
             targetSpeed = Mathf.Round(targetSpeed * 1000f) / 1000f;
             rb.linearVelocity = new Vector3(targetSpeed * currentDir, rb.linearVelocity.y, 0);
-
-       
+            if (isGrounded)
+            {
+                currentAnimation = animationEnum.running;
+            }
         }
         else
         {
             // sets player velocity to 0 with no input
             rb.linearVelocity = new Vector3(targetSpeed * currentDir, rb.linearVelocity.y, 0);
+            if (isGrounded)
+            {
+                currentAnimation = animationEnum.idle;
+            }
         }
     }
     private void jump()
@@ -145,6 +152,8 @@ public class PlayerController : MonoBehaviour
         if (isGrounded && jumpAction.WasPerformedThisFrame())
         {
             rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpHeight, rb.linearVelocity.z);
+            currentAnimation = animationEnum.jumping;
+            isGrounded = false;
         }
         if (rb.linearVelocity.y < fallSpeedMax)
         {
@@ -154,7 +163,7 @@ public class PlayerController : MonoBehaviour
     
     void groundCheck() {
         RaycastHit hit;
-        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), Vector3.down, out hit, 1.0f))
+        if (Physics.Raycast(new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), Vector3.down, out hit, groundCheckRayLength))
         {
             isGrounded = true;
         }
@@ -162,7 +171,7 @@ public class PlayerController : MonoBehaviour
         {
             isGrounded = false;
         }
-            Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), Vector3.down, Color.yellow);
+            Debug.DrawRay(new Vector3(transform.position.x, transform.position.y + .5f, transform.position.z), Vector3.down);
     }
 
     public void updateCoroutine(Coroutine startRoutine)
@@ -171,4 +180,36 @@ public class PlayerController : MonoBehaviour
         Debug.Log(currentAction);
         StartCoroutine("currentAction");
     }
+
+    void playerAnimations()
+    {
+        switch (currentAnimation)
+        {
+            case animationEnum.idle:
+                animator.SetBool(1, true);
+                break;
+            case animationEnum.running:
+                animator.SetBool(1, true);
+
+                break;
+            case animationEnum.climbing:
+                animator.SetBool(1, true);
+
+                break;
+            case animationEnum.falling:
+                animator.SetBool(1, true);
+
+                break;
+            case animationEnum.jumping:
+                animator.SetBool(1, true);
+
+                break;
+            case animationEnum.dashing:
+                animator.SetBool(0, true);
+
+                break;
+        }
+    }
+
+
 }

@@ -228,7 +228,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 80268826039421387}
-  - component: {fileID: 6340224704768627633}
   - component: {fileID: 1185709810291985369}
   - component: {fileID: 7489867880684092761}
   - component: {fileID: 2147279955704149323}
@@ -262,28 +261,6 @@ Transform:
   - {fileID: 1709667747432712443}
   m_Father: {fileID: 6663575338928411025}
   m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
---- !u!95 &6340224704768627633
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 745060685447058289}
-  m_Enabled: 0
-  m_Avatar: {fileID: 9000000, guid: 36078ab0369161e49a29d349ae3e0739, type: 3}
-  m_Controller: {fileID: 9100000, guid: 40db3173a05ae3242b1c182a09b0a183, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &1185709810291985369
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -342,6 +319,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   rb: {fileID: 0}
+  groundCheckRayLength: 0.6
+  animator: {fileID: 6143202822482660671}
   SpeedChangeRate: 5
   maxSpeed: 16
   jumpHeight: 12
@@ -349,7 +328,7 @@ MonoBehaviour:
   defaultGravity: -20
   gravityScale: 1
   canMove: 1
-  isGrounded: 0
+  isGrounded: 1
   currentAnimation: 0
 --- !u!114 &251492302797973160
 MonoBehaviour:
@@ -410,13 +389,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c7313ce671049b40b1a7fc7473ca452, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  wallCheck: {fileID: 5504145780108723074}
   wallLayer:
     serializedVersion: 2
     m_Bits: 64
   wallCheckBoxSize: {x: 1, y: 1, z: 1}
   m_MaxDistance: 1
+  wallCheck: {fileID: 5504145780108723074}
   wallSlidingSpeed: 1
+  wallJumpingTime: 0.2
+  wallJumpingDuration: 0.4
+  wallJumpingPower: {x: 15, y: 15, z: 0}
 --- !u!1 &785193049057662489
 GameObject:
   m_ObjectHideFlags: 0
@@ -1396,6 +1378,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6153821345391055453}
   - component: {fileID: 2538416108367136835}
+  - component: {fileID: 6143202822482660671}
   m_Layer: 0
   m_Name: Dutchman
   m_TagString: Untagged
@@ -1497,6 +1480,28 @@ SkinnedMeshRenderer:
     m_Center: {x: -0.0020531425, y: 0.00031517772, z: -0.00015673204}
     m_Extent: {x: 0.0071433242, y: 0.008020494, z: 0.0037105985}
   m_DirtyAABB: 0
+--- !u!95 &6143202822482660671
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7245507493670394454}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: 83d732f4fda26db43a06a206b7816076, type: 3}
+  m_Controller: {fileID: 9100000, guid: a1eafd0437f8c25448abd3e7f31dc53e, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7699701166680814898
 GameObject:
   m_ObjectHideFlags: 0

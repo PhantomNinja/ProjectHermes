@@ -9,7 +9,7 @@ public class WallJump : MonoBehaviour
     bool m_HitDetect;
     RaycastHit m_Hit;
     PlayerController player;
-    [SerializeField] bool isWallSliding;
+    bool isWallSliding;
     [Header("Wall jump detection size")]
     [SerializeField] LayerMask wallLayer;
     [SerializeField] Vector3 wallCheckBoxSize;
@@ -19,12 +19,12 @@ public class WallJump : MonoBehaviour
     [Space]
     [Header("Wall Jump variables")]
     [SerializeField] float wallSlidingSpeed;
-    [SerializeField] bool isWallJumping;
-    [SerializeField] float wallJumpingDirection;
     [SerializeField] float wallJumpingTime;
     private float wallJumpingCounter;
     [SerializeField] float wallJumpingDuration;
     [SerializeField] Vector3 wallJumpingPower;
+    bool isWallJumping;
+    float wallJumpingDirection;
 
 
     void Start()
@@ -53,6 +53,7 @@ public class WallJump : MonoBehaviour
 
         if (isWall() && !player.isGrounded && player.direction != 0.0f)
         {
+            player.currentAnimation = PlayerController.animationEnum.climbing;
             isWallSliding = true;
             player.rb.linearVelocity = new Vector3(0, -wallSlidingSpeed, player.rb.linearVelocity.z);
             player.gravityScale = 0.0f;
@@ -82,6 +83,7 @@ public class WallJump : MonoBehaviour
         if (jumpAction.WasPerformedThisFrame() && wallJumpingCounter > 0f)
         {
             Debug.Log("wallJump success");
+            player.currentAnimation = PlayerController.animationEnum.jumping;
             player.canMove = false;
             isWallJumping = true;
             player.rb.linearVelocity = new Vector3(wallJumpingPower.x * wallJumpingDirection, wallJumpingPower.y, 0);
@@ -98,6 +100,7 @@ public class WallJump : MonoBehaviour
 
     private void stopWallJump()
     {
+        player.currentAnimation = PlayerController.animationEnum.idle;
         Debug.Log("Stopped walljump");
         isWallJumping = false;
         player.canMove = true;
