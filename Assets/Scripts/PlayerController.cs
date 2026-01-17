@@ -15,10 +15,8 @@ public class PlayerController : MonoBehaviour
     public Animator animator;
     [HideInInspector]
     [Header("Player Input Actions")]
-    private InputAction moveAction;
-    private InputAction jumpAction;
-
-
+    public InputAction moveAction { private set; get; }
+    public InputAction jumpAction { private set; get; }
 
     [Space]
     [Header("Stats")]
@@ -44,6 +42,7 @@ public class PlayerController : MonoBehaviour
     public float direction { set; get; }
     public float lastDirection { private set; get; }
     private AirDash airDash;
+    private WallJump wallJump;
 
     // planning on updating animation enum in this script and having an animator script read from it
     public enum animationEnum
@@ -56,7 +55,7 @@ public class PlayerController : MonoBehaviour
         climbing,
     }
     public animationEnum currentAnimation;
-    private void Awake()
+    public void WakeUpPlayer()
     {
         
         if (instance == null)
@@ -70,19 +69,23 @@ public class PlayerController : MonoBehaviour
 
         airDash = GetComponent<AirDash>();
     }
-    void Start()
+    public void StartPlayer()
     {
         rb = GetComponent<Rigidbody>();
         moveAction = InputSystem.actions.FindAction("Move");
         jumpAction = InputSystem.actions.FindAction("Jump");
-
+        airDash = GetComponent<AirDash>();
+        airDash.StartAirDash();
+        wallJump = GetComponent<WallJump>();
+        wallJump.StartWallJump();
     }
 
-    private void Update()
+    public void UpdatePlayer()
     {
         
         // set gravity for frame calculations
-        
+        airDash.UpdateAirDash();
+        wallJump.UpdateWallJump();
         groundCheck();
 
         if (canMove)

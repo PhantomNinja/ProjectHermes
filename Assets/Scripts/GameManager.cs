@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public ObjectsManager ObjectsManager;
     public PlayerHUDManager PlayerHUDManager;
     public PauseMenuManager PauseMenuManager;
+    public PlayerController PlayerController;
     
     // X = Seconds | Y = Minutes
     private Vector2 MainTimer = new Vector2();
@@ -16,6 +17,8 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
+        PlayerController = FindAnyObjectByType<PlayerController>();
+        PlayerController.WakeUpPlayer();
         ObjectsManager.WakeUpManager();
         PlayerHUDManager.WakeUpManager();
     }
@@ -24,6 +27,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         pauseAction = InputSystem.actions.FindAction("Pause");
+        PlayerController.StartPlayer();
         ObjectsManager.StartManager();
         PlayerHUDManager.StartManager();
     }
@@ -50,6 +54,7 @@ public class GameManager : MonoBehaviour
             MainTimer.x = 0;
         }
         ObjectsManager.UpdateManager();
+        PlayerController.UpdatePlayer();
     }
 
     private void LateUpdate()
