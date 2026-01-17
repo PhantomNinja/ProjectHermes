@@ -4,11 +4,26 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
+    public static SceneLoader Instance;
     public int SceneIndexToLoad;
     private int LoadingSceneIndex;
     private int CreditSceneIndex;
 
     public List<int> UnlockedScenes = new List<int>();
+
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -19,6 +34,7 @@ public class SceneLoader : MonoBehaviour
 
     public void LoadNextScene(int sceneIndex)
     {
+        if (sceneIndex < 0) return;
         UnlockedScenes.Add(sceneIndex);
         // Load Loading Scene
         SceneManager.LoadScene(LoadingSceneIndex);

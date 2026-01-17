@@ -6,6 +6,8 @@ public class ActivationObject : HermesObject
     [Tooltip("This is the object to activate")]
     public TimedObject TimedObject;
     public FadingPlatform FadingPlatform;
+    public bool OneTimeUse = false;
+    private bool wasUsed = false;
     public bool OnByDefault = false;
 
     public override void StartObject()
@@ -22,11 +24,14 @@ public class ActivationObject : HermesObject
             if(FadingPlatform.GetComponent<MovingObject>() != null)
                 FadingPlatform.GetComponent<MovingObject>().ObjectIsOn = OnByDefault;
         }
+        wasUsed = !OneTimeUse;
     }
 
     public void ActivateObject()
     {
+        if (wasUsed && OneTimeUse) return;
         TimedObject.ActivateObject();
+        wasUsed = true;
     }
 
     private void OnTriggerEnter(Collider other)

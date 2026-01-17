@@ -16,7 +16,7 @@ public class MovingObject : HermesObject
     public float MoveTime;
     private float moveTime;
 
-    private Vector3 velocity;
+    private float velocity;
 
     private PlayerController standingPlayer;
     public override void StartObject()
@@ -38,17 +38,17 @@ public class MovingObject : HermesObject
             moveDirection *= -1;
         }
 
-        velocity.x = moveDirection.x * MoveSpeed * Time.deltaTime;
+        velocity = MoveSpeed * Time.deltaTime;
 
         Vector3 newPos = transform.position;
-        newPos.x += velocity.x;
-        newPos.y += moveDirection.y * MoveSpeed * Time.deltaTime;
+        newPos.x += moveDirection.x * velocity;
+        newPos.y += moveDirection.y * velocity;
         transform.position = newPos;
 
         if (standingPlayer)
         {
             Vector3 newPosP = standingPlayer.transform.position;
-            newPosP.x += velocity.x;
+            newPosP.x += moveDirection.x * velocity;
             standingPlayer.transform.position = newPosP;
         }
     }
