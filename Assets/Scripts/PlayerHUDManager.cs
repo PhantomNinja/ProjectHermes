@@ -65,4 +65,13 @@ public class PlayerHUDManager : MonoBehaviour
             ActiveTimerHolders.Remove(holder);
         }
     }
+
+    public void RemoveTimers()
+    {
+        foreach(var holder in ActiveTimerHolders)
+        {
+            Destroy(holder.gameObject);
+        }
+        ActiveTimerHolders.Clear();
+    }
 }

@@ -38,17 +38,17 @@ public class MovingObject : HermesObject
             moveDirection *= -1;
         }
 
-        velocity.x = moveDirection.x * MoveSpeed;
+        velocity.x = moveDirection.x * MoveSpeed * Time.deltaTime;
 
         Vector3 newPos = transform.position;
-        newPos.x += velocity.x * Time.deltaTime;
-        newPos.y += velocity.y * Time.deltaTime;
+        newPos.x += velocity.x;
+        newPos.y += moveDirection.y * MoveSpeed * Time.deltaTime;
         transform.position = newPos;
 
         if (standingPlayer)
         {
             Vector3 newPosP = standingPlayer.transform.position;
-            newPosP.x += velocity.x * Time.deltaTime;
+            newPosP.x += velocity.x;
             standingPlayer.transform.position = newPosP;
         }
     }
