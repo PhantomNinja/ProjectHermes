@@ -7,7 +7,7 @@ public class SceneLoader : MonoBehaviour
     public static SceneLoader Instance;
     public int SceneIndexToLoad;
     private int LoadingSceneIndex;
-    private int CreditSceneIndex;
+    public int CreditSceneIndex;
 
     public List<int> UnlockedScenes = new List<int>();
 
@@ -26,10 +26,15 @@ public class SceneLoader : MonoBehaviour
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private void OnLevelWasLoaded(int level)
+    {
+        
+    }
     void Start()
     {
-        CreditSceneIndex = SceneManager.sceneCount - 1;
+        CreditSceneIndex = SceneManager.sceneCountInBuildSettings - 1;
         LoadingSceneIndex = SceneManager.sceneCountInBuildSettings - 2;
+        Debug.Log("Credit Index: " + CreditSceneIndex);
     }
 
     public void LoadNextScene(int sceneIndex)
