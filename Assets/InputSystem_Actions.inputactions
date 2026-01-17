@@ -362,28 +362,6 @@
                 },
                 {
                     "name": "",
-                    "id": "d55cce21-02dd-4b4a-aac1-e0a78ac029b0",
-                    "path": "<Keyboard>/a",
-                    "interactions": "MultiTap",
-                    "processors": "",
-                    "groups": "",
-                    "action": "AirDash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2a76c2e0-f6d0-4db1-adf6-b892eae3c848",
-                    "path": "<Keyboard>/d",
-                    "interactions": "MultiTap",
-                    "processors": "",
-                    "groups": "",
-                    "action": "AirDash",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "4585c48b-32d3-4d06-aa5f-1deccf4465e4",
                     "path": "<Keyboard>/ctrl",
                     "interactions": "",

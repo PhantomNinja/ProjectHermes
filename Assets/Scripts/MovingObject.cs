@@ -16,6 +16,9 @@ public class MovingObject : HermesObject
     public float MoveTime;
     private float moveTime;
 
+    private Vector3 velocity;
+
+    private PlayerController standingPlayer;
     public override void StartObject()
     {
         base.StartObject();
@@ -35,12 +38,36 @@ public class MovingObject : HermesObject
             moveDirection *= -1;
         }
 
+        velocity.x = moveDirection.x * MoveSpeed;
+
         Vector3 newPos = transform.position;
-        newPos.x += moveDirection.x * MoveSpeed * Time.deltaTime;
-        newPos.y += moveDirection.y * MoveSpeed * Time.deltaTime;
+        newPos.x += velocity.x * Time.deltaTime;
+        newPos.y += velocity.y * Time.deltaTime;
         transform.position = newPos;
+
+        if (standingPlayer)
+        {
+            Vector3 newPosP = standingPlayer.transform.position;
+            newPosP.x += velocity.x * Time.deltaTime;
+            standingPlayer.transform.position = newPosP;
+        }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<PlayerController>())
+        {
+            if(collision.gameObject.GetComponent<PlayerController>().isGrounded)
+            standingPlayer = collision.gameObject.GetComponent<PlayerController>();
+        }
+    }
+    private void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<PlayerController>())
+        {
+            standingPlayer = null;
+        }
+    }
     public override void ResetObject()
     {
         base.ResetObject();

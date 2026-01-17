@@ -27,13 +27,13 @@ public class WallJump : MonoBehaviour
     float wallJumpingDirection;
 
 
-    void Start()
+    public void StartWallJump()
     {
         jumpAction = InputSystem.actions.FindAction("Jump");
         player = PlayerController.instance;
     }
 
-    void Update()
+    public void UpdateWallJump()
     {
 
         WallSlide();

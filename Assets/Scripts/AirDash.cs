@@ -20,14 +20,14 @@ public class AirDash : MonoBehaviour
     public InputAction dashAction;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public void StartAirDash()
     {
         player = PlayerController.instance;
         dashAction = InputSystem.actions.FindAction("AirDash");
     }
     
     // Update is called once per frame
-    void Update()
+    public void UpdateAirDash()
     {
         if (dashAction.WasCompletedThisFrame() && canDash)
         {
