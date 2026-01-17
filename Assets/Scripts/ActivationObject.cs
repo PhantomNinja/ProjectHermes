@@ -27,15 +27,21 @@ public class ActivationObject : HermesObject
         wasUsed = !OneTimeUse;
     }
 
+    private void Update()
+    {
+        Debug.Log(wasUsed);
+    }
+
     public void ActivateObject()
     {
-        if (wasUsed && OneTimeUse) return;
         TimedObject.ActivateObject();
-        wasUsed = true;
     }
 
     private void OnTriggerEnter(Collider other)
     {
+        if(other.GetComponent<PlayerController>() == null) return;
+        if (wasUsed && OneTimeUse) return;
+
         if (TimedObject)
         {
             if (TimedObject.IsRunning) return;
@@ -48,6 +54,7 @@ public class ActivationObject : HermesObject
         {
             FadingPlatform.Toggle();
         }
+        wasUsed = true;
     }
 
     public override void ResetObject()
