@@ -456,7 +456,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Programming
 
-    Alexander'
+    Alexander Scott'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1126,6 +1126,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SceneLoader
   SceneIndexToLoad: 0
+  CreditSceneIndex: 0
   UnlockedScenes: 
 --- !u!4 &650270938
 Transform:
@@ -2893,7 +2894,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Art
 
-    Evelyn'
+    Eve Gish'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

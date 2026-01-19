@@ -5,12 +5,11 @@ using UnityEngine.SceneManagement;
 public class SceneLoader : MonoBehaviour
 {
     public static SceneLoader Instance;
-    public int SceneIndexToLoad;
     private int LoadingSceneIndex;
     public int CreditSceneIndex;
 
     public List<int> UnlockedScenes = new List<int>();
-
+    public int currentSceneIndex { private set; get; }
     private void Awake()
     {
         if (Instance == null)
@@ -41,10 +40,8 @@ public class SceneLoader : MonoBehaviour
     {
         if (sceneIndex < 0) return;
         UnlockedScenes.Add(sceneIndex);
-        // Load Loading Scene
         SceneManager.LoadScene(LoadingSceneIndex);
-        // Load Actual Scene
-        SceneManager.LoadScene(sceneIndex);
+        currentSceneIndex = sceneIndex;
     }
 
     public void LoadCreditScene()
@@ -60,5 +57,10 @@ public class SceneLoader : MonoBehaviour
     public void CloseGame()
     {
         Application.Quit();
+    }
+
+    public void LoadCurrentScene()
+    {
+        SceneManager.LoadScene(currentSceneIndex);
     }
 }
